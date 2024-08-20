@@ -1,3 +1,37 @@
-[gd_scene format=3 uid="uid://dm0tj0n6y54cb"]
+[gd_scene load_steps=5 format=3 uid="uid://dm0tj0n6y54cb"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_kww0a"]
+[ext_resource type="PackedScene" uid="uid://dutjocudajqwq" path="res://prefabs/player.tscn" id="1_ndjx4"]
+[ext_resource type="PackedScene" uid="uid://b4p5vyxmcv6tu" path="res://prefabs/enemy.tscn" id="2_754k5"]
+
+[sub_resource type="Curve2D" id="Curve2D_7xll6"]
 
 [node name="main" type="Node2D"]
+position = Vector2(-125, -248)
+script = ExtResource("1_kww0a")
+bug_scene = ExtResource("2_754k5")
+
+[node name="player" parent="." instance=ExtResource("1_ndjx4")]
+position = Vector2(231, 361)
+
+[node name="BugTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="ScoreTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="StartPosition" type="Marker2D" parent="."]
+position = Vector2(240, 360)
+
+[node name="BugPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_7xll6")
+
+[node name="BugPathLocation" type="PathFollow2D" parent="BugPath"]
+
+[connection signal="hit" from="player" to="." method="game_over"]
+[connection signal="timeout" from="BugTimer" to="." method="_on_bug_timer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
